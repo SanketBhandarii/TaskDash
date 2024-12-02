@@ -52,7 +52,7 @@ const TasksDashboard = () => {
             tasks.map((task) => (
               <div
                 key={task.id}
-                className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{task.title}</h3>
                 <p className="text-gray-700 dark:text-gray-300 mb-4">{task.description}</p>
