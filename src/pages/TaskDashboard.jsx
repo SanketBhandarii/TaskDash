@@ -12,11 +12,14 @@ import {
 import TaskForm from '../components/TaskForm';
 import Header from '../components/Header';
 import FilterBar from '../components/FilterBar';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 const TasksDashboard = () => {
   const dispatch = useDispatch();
   const [showForm, setShowForm] = useState(false);
   const [filter, setFilter] = useState('All');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
 
   const tasks = useSelector((state) => {
     if (filter === 'All') return selectAllTasks(state);
@@ -29,6 +32,24 @@ const TasksDashboard = () => {
   const handleAddTask = (task) => {
     dispatch(addTask(task));
     setShowForm(false);
+  };
+
+  const handleDeleteTask = () => {
+    if (taskToDelete) {
+      dispatch(deleteTask(taskToDelete));
+      setIsModalOpen(false); // Close the modal
+      setTaskToDelete(null); // Clear task to delete
+    }
+  };
+
+  const handleOpenModal = (taskId) => {
+    setTaskToDelete(taskId);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setTaskToDelete(null);
   };
 
   return (
@@ -69,7 +90,7 @@ const TasksDashboard = () => {
                   </button>
 
                   <button
-                    onClick={() => dispatch(deleteTask(task.id))}
+                    onClick={() => handleOpenModal(task.id)}
                     className="px-5 py-2 rounded-md bg-red-600 hover:bg-red-700 text-white focus:outline-none"
                   >
                     Delete
@@ -80,6 +101,14 @@ const TasksDashboard = () => {
           )}
         </div>
       </main>
+
+      {/* Modal for Confirmation */}
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleDeleteTask}
+        taskName={tasks.find((task) => task.id === taskToDelete)?.title || ''}
+      />
     </div>
   );
 };
